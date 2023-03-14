@@ -39,5 +39,10 @@ func NewServer() *gin.Engine {
 		registerStatus(status)
 	}
 
+	{
+		milestone := api.Group("/milestones")
+		registerMilestone(milestone)
+	}
+
 	return r
 }
