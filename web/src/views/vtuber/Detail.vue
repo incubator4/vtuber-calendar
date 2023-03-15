@@ -68,22 +68,28 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
 
 <template>
   <main>
-    <banner></banner>
-    <div style="padding: 20px; min-height: 50vh">
-      <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
-        <el-tab-pane label="日程" name="Calendar">
-          <table-calendar @update="loadData"></table-calendar>
-        </el-tab-pane>
-        <el-tab-pane label="里程碑" name="milestore">
-          <Milestone
-            v-if="vtuberStore.currentVtuber?.id"
-            :vid="vtuberStore.currentVtuber.id"
-          />
-        </el-tab-pane>
-        <el-tab-pane label="个人信息" name="third">
-          <info />
-        </el-tab-pane>
-      </el-tabs>
+    <div class="wrapper">
+      <banner></banner>
+      <div style="padding: 20px 0; min-height: 50vh">
+        <el-tabs
+          v-model="activeName"
+          type="border-card"
+          @tab-click="handleClick"
+        >
+          <el-tab-pane label="日程" name="Calendar">
+            <table-calendar @update="loadData"></table-calendar>
+          </el-tab-pane>
+          <el-tab-pane label="里程碑" name="milestore">
+            <Milestone
+              v-if="vtuberStore.currentVtuber?.id"
+              :vid="vtuberStore.currentVtuber.id"
+            />
+          </el-tab-pane>
+          <el-tab-pane label="个人信息" name="third">
+            <info />
+          </el-tab-pane>
+        </el-tabs>
+      </div>
     </div>
   </main>
 </template>
@@ -98,5 +104,10 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
   font-size: 14px;
   font-family: "微软雅黑", arail;
   cursor: pointer;
+}
+.wrapper {
+  max-width: 1000px;
+  margin: 0 auto;
+  /* text-align: center; */
 }
 </style>
