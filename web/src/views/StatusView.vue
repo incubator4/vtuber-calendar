@@ -51,7 +51,7 @@ const options: Array<{
 
 const currentOption = ref<"GB" | "MB" | "KB">("GB");
 
-const curentFormat = computed(() => {
+const currentFormat = computed(() => {
   const option = options.find((o) => o.unit === currentOption.value);
   return option ? option.format : (input: number) => input;
 });
@@ -77,7 +77,7 @@ const curentFormat = computed(() => {
         <el-col :span="6">
           <el-statistic
             title="已用流量"
-            :value="curentFormat(packageSet.TrafficUsed)"
+            :value="currentFormat(packageSet.TrafficUsed)"
           >
             <template #suffix>/{{ currentOption }}</template>
           </el-statistic>
@@ -85,7 +85,7 @@ const curentFormat = computed(() => {
         <el-col :span="6">
           <el-statistic
             title="总流量"
-            :value="curentFormat(packageSet.TrafficPackageTotal)"
+            :value="currentFormat(packageSet.TrafficPackageTotal)"
           >
             <template #suffix>/{{ currentOption }}</template>
           </el-statistic>
@@ -93,7 +93,7 @@ const curentFormat = computed(() => {
         <el-col :span="6">
           <el-statistic
             title="剩余"
-            :value="curentFormat(packageSet.TrafficPackageRemaining)"
+            :value="currentFormat(packageSet.TrafficPackageRemaining)"
           >
             <template #suffix>/{{ currentOption }}</template>
           </el-statistic>

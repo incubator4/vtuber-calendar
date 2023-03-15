@@ -12,6 +12,8 @@ import EditDialog from "./EditDialog.vue";
 import { Hide, View } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
 import ImageRender from "@/components/imageRender/index.vue";
+import Milestone from "./Milestone.vue";
+import type { TabsPaneContext } from "element-plus";
 
 const props = defineProps({ uid: String });
 
@@ -28,7 +30,7 @@ const loadData = (uid: number) => {
     state.total = calendarStore.calendars.length;
   });
   vtuberStore.getVtuber(uid).then(() => {
-    const id = vtuberStore.curentVtuber?.id as number;
+    const id = vtuberStore.currentVtuber?.id as number;
     eventModel.cid = id;
     configStore.list(id);
   });
@@ -59,7 +61,7 @@ const defaultEvent: ICalendar = {
   title: "",
   start_time: moment().toDate(),
   end_time: moment().add(2, "h").toDate(),
-  cid: vtuberStore.curentVtuber?.id as number,
+  cid: vtuberStore.currentVtuber?.id as number,
   tag_id: 0,
   is_active: true,
 };
@@ -159,6 +161,15 @@ const shortcuts = [
       ];
     },
   },
+  {
+    text: "下周",
+    value: () => {
+      return [
+        moment().startOf("week").add(1, "week").toDate(),
+        moment().endOf("week").add(1, "week").toDate(),
+      ];
+    },
+  },
 ];
 
 const tagName = (tag_id: number) => {
@@ -169,6 +180,12 @@ const tagName = (tag_id: number) => {
 const renderPanel = ref(false);
 const onRender = () => {
   renderPanel.value = true;
+};
+
+const activeName = ref("Calendar");
+
+const handleClick = (tab: TabsPaneContext, event: Event) => {
+  console.log(tab.props.name, event);
 };
 </script>
 
@@ -184,90 +201,102 @@ const onRender = () => {
           <el-skeleton style="width: 100%" :row="10"> </el-skeleton
         ></el-col>
       </el-row>
-      <el-row style="margin-top: 20px">
-        <el-col :span="2">
-          <el-form-item label="倒序">
-            <el-switch v-model="isReverse"></el-switch>
-          </el-form-item>
-        </el-col>
-        <el-col :span="2"></el-col>
-        <el-col :span="10">
-          <el-date-picker
-            v-model="pickDateRange"
-            type="daterange"
-            unlink-panels
-            range-separator="To"
-            start-placeholder="Start date"
-            end-placeholder="End date"
-            :shortcuts="shortcuts"
-            :size="size"
+
+      <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
+        <el-tab-pane label="日程" name="Calendar">
+          <el-row style="margin-top: 20px">
+            <el-col :span="2">
+              <el-form-item label="倒序">
+                <el-switch v-model="isReverse"></el-switch>
+              </el-form-item>
+            </el-col>
+            <el-col :span="2"></el-col>
+            <el-col :span="10">
+              <el-date-picker
+                v-model="pickDateRange"
+                type="daterange"
+                unlink-panels
+                range-separator="To"
+                start-placeholder="Start date"
+                end-placeholder="End date"
+                :shortcuts="shortcuts"
+                :size="size"
+              />
+            </el-col>
+            <el-col :span="4"></el-col>
+            <el-col :span="4">
+              <el-button type="primary" @click="onNew">新增</el-button>
+              <el-button @click="onRender">渲染</el-button>
+            </el-col>
+          </el-row>
+
+          <el-table :data="tableData" style="width: 100%">
+            <el-table-column label="Active" width="70">
+              <template #default="{ row }">
+                <el-icon v-if="row.is_active"><View /></el-icon>
+                <el-icon v-else><Hide /></el-icon>
+              </template>
+            </el-table-column>
+            <el-table-column label="Datetime" width="180">
+              <el-table-column label="Date" width="120">
+                <template #default="{ row }">
+                  {{ moment(row.start_time).format("YYYY-MM-DD") }}
+                </template>
+              </el-table-column>
+              <el-table-column label="Time" width="80">
+                <template #default="{ row }">
+                  {{ moment(row.start_time).format("HH:mm") }}
+                </template>
+              </el-table-column>
+
+              <el-table-column label="Duration" width="100">
+                <template #default="{ row }">
+                  {{
+                    moment(row.end_time).diff(moment(row.start_time), "hour")
+                  }}小时
+                </template>
+              </el-table-column>
+            </el-table-column>
+
+            <el-table-column prop="title" label="Title" />
+            <el-table-column prop="tag_id" label="Tag" width="80">
+              <template #default="{ row }">
+                <el-tag> {{ tagName(row.tag_id) }} </el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column fixed="right" label="Action" width="180">
+              <template #default="{ row }">
+                <el-button
+                  type="primary"
+                  @click="
+                    () => {
+                      onEdit(row);
+                    }
+                  "
+                >
+                  编辑</el-button
+                >
+                <el-button
+                  type="danger"
+                  @click="
+                    () => {
+                      onDelete(row.id);
+                    }
+                  "
+                  >删除</el-button
+                >
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
+        <el-tab-pane label="里程碑" name="milestore">
+          <Milestone
+            v-if="vtuberStore.currentVtuber?.id"
+            :vid="vtuberStore.currentVtuber.id"
           />
-        </el-col>
-        <el-col :span="4"></el-col>
-        <el-col :span="4">
-          <el-button type="primary" @click="onNew">新增</el-button>
-          <el-button @click="onRender">渲染</el-button>
-        </el-col>
-      </el-row>
-
-      <el-table :data="tableData" style="width: 100%">
-        <el-table-column label="Active" width="70">
-          <template #default="{ row }">
-            <el-icon v-if="row.is_active"><View /></el-icon>
-            <el-icon v-else><Hide /></el-icon>
-          </template>
-        </el-table-column>
-        <el-table-column label="Datetime" width="180">
-          <el-table-column label="Date" width="120">
-            <template #default="{ row }">
-              {{ moment(row.start_time).format("YYYY-MM-DD") }}
-            </template>
-          </el-table-column>
-          <el-table-column label="Time" width="80">
-            <template #default="{ row }">
-              {{ moment(row.start_time).format("HH:mm") }}
-            </template>
-          </el-table-column>
-
-          <el-table-column label="Duration" width="100">
-            <template #default="{ row }">
-              {{
-                moment(row.end_time).diff(moment(row.start_time), "hour")
-              }}小时
-            </template>
-          </el-table-column>
-        </el-table-column>
-
-        <el-table-column prop="title" label="Title" />
-        <el-table-column prop="tag_id" label="Tag" width="80">
-          <template #default="{ row }">
-            <el-tag> {{ tagName(row.tag_id) }} </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column fixed="right" label="Action" width="180">
-          <template #default="{ row }">
-            <el-button
-              type="primary"
-              @click="
-                () => {
-                  onEdit(row);
-                }
-              "
-            >
-              编辑</el-button
-            >
-            <el-button
-              type="danger"
-              @click="
-                () => {
-                  onDelete(row.id);
-                }
-              "
-              >删除</el-button
-            >
-          </template>
-        </el-table-column>
-      </el-table>
+        </el-tab-pane>
+        <el-tab-pane label="个人信息" name="third">ToDo</el-tab-pane>
+      </el-tabs>
     </div>
     <EditDialog
       v-model="dialogVisible"

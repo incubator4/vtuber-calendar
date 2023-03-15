@@ -59,3 +59,13 @@ interface ImageRenderConfig {
 }
 
 type VtuberCalendar = ICalendar & IVtuber;
+
+interface IMilestone {
+  id: number;
+  vid: number;
+  date: Date;
+  event: string;
+  description: string;
+  is_dispaly: boolean;
+  is_deleted: boolean;
+}
