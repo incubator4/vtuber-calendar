@@ -23,7 +23,7 @@ func ListMilestone(c *gin.Context) {
 		return
 	}
 
-	milestones, err := dao.ListMileStone(dao.WithVtuberID(vid))
+	milestones, err := dao.ListMileStone(dao.WithVtuberID(vid), dao.WithOrder("date"))
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"error": err,
