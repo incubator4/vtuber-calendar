@@ -7,6 +7,7 @@ import (
 	"github.com/incubator4/vtuber-calendar/pkg/dao"
 	"github.com/incubator4/vtuber-calendar/pkg/types"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -20,8 +21,15 @@ func registerCalendars(g *gin.RouterGroup) {
 
 func ListCalendars(c *gin.Context) {
 	timeRange, err := getStartAndEndOfDate(c)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
 	cids := c.QueryArray("cid")
 	uids := c.QueryArray("uid")
+	all, err := strconv.ParseBool(c.DefaultQuery("all", "false"))
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"error": err.Error(),
@@ -33,7 +41,7 @@ func ListCalendars(c *gin.Context) {
 		dao.WithCID(cids),
 		dao.WithTimeRange(timeRange),
 		dao.WithOrder("id"),
-		dao.WithActive(),
+		dao.WithAll(all),
 	)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{

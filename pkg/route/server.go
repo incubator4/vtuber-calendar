@@ -44,5 +44,10 @@ func NewServer() *gin.Engine {
 		registerMilestone(milestone)
 	}
 
+	{
+		bilibili := api.Group("/bilibili")
+		registerBilibili(bilibili)
+	}
+
 	return r
 }

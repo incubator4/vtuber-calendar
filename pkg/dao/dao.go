@@ -79,10 +79,16 @@ func WithNotDelete() Option {
 	}
 }
 
-func WithActive() Option {
+func WithAll(all bool) Option {
+	if all {
+		return func(db *gorm.DB) *gorm.DB {
+			return db
+		}
+	}
 	return func(db *gorm.DB) *gorm.DB {
 		return db.Where("is_active = ?", true)
 	}
+
 }
 
 func WithOwner(id int) Option {
