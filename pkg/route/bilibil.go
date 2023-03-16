@@ -38,7 +38,9 @@ func GetBiliUserInfo(c *gin.Context) {
 			"error": err,
 		})
 	} else {
-		c.JSON(http.StatusOK, info)
+		c.JSON(http.StatusOK, gin.H{
+			"data": info,
+		})
 	}
 
 }
