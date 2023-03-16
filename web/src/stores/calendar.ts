@@ -24,6 +24,7 @@ export const useCalendarStore = defineStore("calendar", () => {
     start?: string;
     end?: string;
     uid?: Array<string>;
+    all?: boolean;
   }) => {
     return request
       .get<VtuberCalendar[]>(`/cal`, {

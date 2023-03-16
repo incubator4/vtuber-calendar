@@ -4,24 +4,26 @@ import { useVtbmoeStore } from "@/stores";
 const vmStore = useVtbmoeStore();
 </script>
 <template>
-  <div v-if="vmStore.vtuberDetail">
-    <img
-      class="bannner"
-      style="width: 100%"
-      :src="vmStore.vtuberDetail?.topPhoto"
-    />
+  {{ vmStore.user }}
+  <div v-if="vmStore.user">
+    <img class="bannner" style="width: 100%" :src="vmStore.user.top_photo" />
     <div style="position: absolute; left: 40px; top: 20px">
       <el-container style="max-width: 600px">
         <el-aside width="70px">
           <el-avatar
             style="margin-top: 30px"
             size="large"
-            :src="vmStore.vtuberDetail?.face"
+            :src="vmStore.user.face"
           />
-          <el-tag v-if="vmStore.vtuberDetail?.liveStatus === 1">
+          <el-tag
+            v-if="
+              vmStore.user.live_room.roomStatus &&
+              vmStore.user.live_room.liveStatus === 1
+            "
+          >
             <el-link
               target="_blank"
-              :href="`https://live.bilibili.com/${vmStore.vtuberDetail.roomid}`"
+              :href="`https://live.bilibili.com/${vmStore.user.live_room.roomid}`"
               >直播中</el-link
             >
           </el-tag>
@@ -29,9 +31,9 @@ const vmStore = useVtbmoeStore();
         <el-main style="color: white">
           <div class="card">
             <h2 style="font-weight: bold">
-              {{ vmStore.vtuberDetail?.uname }}
+              {{ vmStore.user.name }}
             </h2>
-            {{ vmStore.vtuberDetail?.sign }}
+            {{ vmStore.user.sign }}
           </div>
         </el-main>
       </el-container>

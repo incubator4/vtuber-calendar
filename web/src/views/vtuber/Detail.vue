@@ -26,7 +26,7 @@ const isDark = useDark();
 const loadData = () => {
   const uid = +(props.uid as string);
 
-  calendarStore.listCalendar({ uid: [uid.toString()] }).then(() => {
+  calendarStore.listCalendar({ uid: [uid.toString()], all: true }).then(() => {
     state.total = calendarStore.calendars.length;
   });
   vtuberStore.getVtuber(uid).then(() => {
@@ -34,11 +34,11 @@ const loadData = () => {
     configStore.list(id);
   });
   calendarStore.listTags();
-  vmStore.getDetail(uid);
+  vmStore.getUserInfo(uid);
 };
 
 onMounted(() => {
-  vmStore.clearDetail();
+  vmStore.clearUserInfo();
   calendarStore.clearCalendar();
   loadData();
 });
