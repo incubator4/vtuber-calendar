@@ -183,6 +183,7 @@ nav a:first-of-type {
       text-align: center;
       color: var(--el-text-color-primary);
       .main {
+        font-weight: bold;
         font-size: 60px;
         text-align: center;
         margin-left: -40px;
@@ -210,15 +211,6 @@ nav a:first-of-type {
         .secondary {
           margin-top: -30px;
           font-size: 40px;
-        }
-      }
-      @media (min-width: 1920px) {
-        .main {
-          font-size: 256px;
-        }
-        .secondary {
-          margin-top: -30px;
-          font-size: 48px;
         }
       }
     }

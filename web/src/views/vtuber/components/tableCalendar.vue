@@ -130,14 +130,17 @@ const onRender = () => {
 };
 </script>
 <template>
-  <el-row style="margin-top: 20px">
-    <el-col :span="2">
+  <el-row style="margin-top: 20px; margin-bottom: 5px">
+    <el-col :sm="4" :xs="8">
       <el-form-item label="倒序">
         <el-switch v-model="isReverse"></el-switch>
       </el-form-item>
     </el-col>
-    <el-col :span="2"></el-col>
-    <el-col :span="10">
+    <el-col :sm="8" :xs="16">
+      <el-button type="primary" @click="onNew">新增</el-button>
+      <el-button @click="onRender">渲染</el-button>
+    </el-col>
+    <el-col :sm="8" :xs="24">
       <el-date-picker
         v-model="pickDateRange"
         type="daterange"
@@ -148,11 +151,6 @@ const onRender = () => {
         :shortcuts="shortcuts"
         :size="size"
       />
-    </el-col>
-    <el-col :span="4"></el-col>
-    <el-col :span="4">
-      <el-button type="primary" @click="onNew">新增</el-button>
-      <el-button @click="onRender">渲染</el-button>
     </el-col>
   </el-row>
 
