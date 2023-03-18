@@ -10,6 +10,7 @@ const image2 = ref<HTMLImageElement>();
 const configStore = useImageRenderConfig();
 
 const renderStage = ref();
+const render = ref(false);
 
 const stageSize = reactive({
   width: 1920,
@@ -42,6 +43,18 @@ const computedData = computed(() =>
       //   const date = new Date(start_time);
       //   return date > startOfWeek && date < endofWeek;
       // })
+      .sort((a, b) => (a.start_time > b.start_time ? 1 : -1)),
+    (event) => {
+      const index = new Date(event.start_time).getDay();
+      return index === 0 ? 7 : index;
+    }
+  )
+);
+
+const computedActiveData = computed(() =>
+  groupBy(
+    props.data
+      .filter(({ is_active }) => is_active)
       .sort((a, b) => (a.start_time > b.start_time ? 1 : -1)),
     (event) => {
       const index = new Date(event.start_time).getDay();
@@ -297,10 +310,11 @@ const defaultNoEvent = ref("无日程");
         <div style="text-align: center">
           <CanvasStage
             :image="image2"
+            v-show="render"
             :size="computeSize"
             :config="currentConfig"
             :no-event="defaultNoEvent"
-            :data="computedData"
+            :data="computedActiveData"
           />
           <CanvasStage
             ref="renderStage"
@@ -309,7 +323,7 @@ const defaultNoEvent = ref("无日程");
             :size="stageSize"
             :config="currentConfig"
             :no-event="defaultNoEvent"
-            :data="computedData"
+            :data="computedActiveData"
           />
         </div>
       </el-main>
