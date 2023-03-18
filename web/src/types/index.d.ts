@@ -42,6 +42,7 @@ interface FontConfig {
   size: number;
   color: string;
   stroke: string;
+  stroke_width: number;
   layout: string;
   style: string;
 }

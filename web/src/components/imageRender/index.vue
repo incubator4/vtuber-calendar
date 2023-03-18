@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import { groupBy } from "lodash";
-import moment from "moment";
-import { useScreen } from "vue-screen";
 import { useImageRenderConfig } from "@/stores";
-import type konva from "konva";
+
+import CanvasStage from "./CanvasStage.vue";
+
 const props = defineProps<{ data: ICalendar[] }>();
 const image2 = ref<HTMLImageElement>();
-const screen = useScreen();
 
 const configStore = useImageRenderConfig();
 
-const stage = ref();
+const renderStage = ref();
 
 const stageSize = reactive({
   width: 1920,
@@ -36,8 +35,6 @@ const resize = () => {
   const ratio = width / stageSize.width;
 };
 
-const render = ref(false);
-
 const computedData = computed(() =>
   groupBy(
     props.data
@@ -52,11 +49,6 @@ const computedData = computed(() =>
     }
   )
 );
-
-const timeFormat = (d: Date) => {
-  const m = moment(d);
-  return m.format("HH:mm");
-};
 
 const load = () => {
   const image = new window.Image();
@@ -76,9 +68,10 @@ const load = () => {
   };
 };
 
-onMounted(() => {
-  // load();
-});
+const onSave = () => {
+  const s = renderStage.value;
+  s.onSave();
+};
 
 let currentConfig = ref<ImageRenderConfig>({
   name: "",
@@ -113,6 +106,7 @@ let currentConfig = ref<ImageRenderConfig>({
     size: 0,
     color: "",
     stroke: "",
+    stroke_width: 2,
     style: "",
     layout: "",
   },
@@ -128,31 +122,19 @@ const configChange = (id: number) => {
   load();
 };
 
-const fontStyle = ref<Array<String>>([]);
-
-const curFontStyle = computed(() => {
-  const style = fontStyle.value;
-  return style && style.length > 0 ? style.join("   ") : "normal";
+const curFontStyle = computed<Array<String>>({
+  get() {
+    return currentConfig.value.font.style.split(" ");
+  },
+  set(vals) {
+    currentConfig.value.font.style = vals.join(" ");
+  },
 });
 
 const activeNames = ref(["1"]);
 const handleChange = (val: string[]) => {
   console.log(val);
 };
-
-const onSave = () => {
-  const s = stage.value.getNode() as unknown as konva.Stage;
-  const dataURL = s.toDataURL();
-  const link = document.createElement("a");
-  link.download = "image.png";
-  link.href = dataURL;
-  document.body.appendChild(link);
-  link.click();
-
-  //   stage.value?.toImage();
-};
-
-const strokeWidth = ref(2);
 
 const defaultNoEvent = ref("无日程");
 </script>
@@ -231,14 +213,14 @@ const defaultNoEvent = ref("无日程");
               <el-input-number
                 style="width: 100%"
                 :max="10"
-                v-model="strokeWidth"
+                v-model="currentConfig.font.stroke_width"
                 placeholder=""
               />
             </el-form-item>
             <el-form-item label="样式">
-              <el-checkbox-group v-model="fontStyle">
-                <el-checkbox label="italic" />
+              <el-checkbox-group v-model="curFontStyle">
                 <el-checkbox label="bold" />
+                <el-checkbox label="italic" />
               </el-checkbox-group>
             </el-form-item>
           </el-collapse-item>
@@ -313,122 +295,22 @@ const defaultNoEvent = ref("无日程");
       </el-aside>
       <el-main>
         <div style="text-align: center">
-          <v-stage v-if="render" ref="previewStage" :config="computeSize">
-            <v-layer ref="layer">
-              <v-image
-                ref="image"
-                :config="{
-                  image: image2,
-                }"
-              />
-            </v-layer>
-            <v-layer :config="{ ...currentConfig.text_offset }">
-              <v-group
-                v-for="(subGroup, gIndex) in currentConfig.text_group"
-                :config="{
-                  x: currentConfig.text_group_offset.x * gIndex,
-                  y: currentConfig.text_group_offset.y * gIndex,
-                }"
-              >
-                <v-group
-                  v-for="(group, index) in subGroup"
-                  :config="{
-                    x: currentConfig.row.x * +index,
-                    y: currentConfig.row.y * +index,
-                  }"
-                >
-                  <v-group v-if="computedData[group]">
-                    <v-text
-                      v-for="(cal, i) in computedData[group]"
-                      :config="{
-                        text: timeFormat(cal.start_time) + cal.title,
-                        fontSize: currentConfig.font.size,
-                        fontFamily: currentConfig.font.family,
-                        fontStyle: curFontStyle,
-                        stroke: currentConfig.font.stroke,
-                        strokeWidth,
-                        fill: currentConfig.font.color,
-                        x: currentConfig.col.x * i,
-                        y: currentConfig.col.y * i,
-                      }"
-                    ></v-text>
-                  </v-group>
-                  <v-group v-else>
-                    <v-text
-                      :config="{
-                        text: defaultNoEvent,
-                        align: 'center',
-                        fontSize: currentConfig.font.size,
-                        fontFamily: currentConfig.font.family,
-                        fontStyle: curFontStyle,
-                        stroke: currentConfig.font.stroke,
-                        strokeWidth,
-                        fill: currentConfig.font.color,
-                      }"
-                    ></v-text>
-                  </v-group>
-                </v-group>
-              </v-group>
-            </v-layer>
-          </v-stage>
-          <v-stage v-show="false" v-if="render" ref="stage" :config="stageSize">
-            <v-layer ref="layer">
-              <v-image
-                ref="image"
-                :config="{
-                  image: image2,
-                }"
-              />
-            </v-layer>
-            <v-layer :config="{ ...currentConfig.text_offset }">
-              <v-group
-                v-for="(subGroup, gIndex) in currentConfig.text_group"
-                :config="{
-                  x: currentConfig.text_group_offset.x * gIndex,
-                  y: currentConfig.text_group_offset.y * gIndex,
-                }"
-              >
-                <v-group
-                  v-for="(group, index) in subGroup"
-                  :config="{
-                    x: currentConfig.row.x * +index,
-                    y: currentConfig.row.y * +index,
-                  }"
-                >
-                  <v-group v-if="computedData[group]">
-                    <v-text
-                      v-for="(cal, i) in computedData[group]"
-                      :config="{
-                        text: timeFormat(cal.start_time) + cal.title,
-                        fontSize: currentConfig.font.size,
-                        fontFamily: currentConfig.font.family,
-                        fontStyle: curFontStyle,
-                        stroke: currentConfig.font.stroke,
-                        strokeWidth,
-                        fill: currentConfig.font.color,
-                        x: currentConfig.col.x * i,
-                        y: currentConfig.col.y * i,
-                      }"
-                    ></v-text>
-                  </v-group>
-                  <v-group v-else>
-                    <v-text
-                      :config="{
-                        text: defaultNoEvent,
-                        align: 'center',
-                        fontSize: currentConfig.font.size,
-                        fontFamily: currentConfig.font.family,
-                        fontStyle: curFontStyle,
-                        stroke: currentConfig.font.stroke,
-                        strokeWidth,
-                        fill: currentConfig.font.color,
-                      }"
-                    ></v-text>
-                  </v-group>
-                </v-group>
-              </v-group>
-            </v-layer>
-          </v-stage>
+          <CanvasStage
+            :image="image2"
+            :size="computeSize"
+            :config="currentConfig"
+            :no-event="defaultNoEvent"
+            :data="computedData"
+          />
+          <CanvasStage
+            ref="renderStage"
+            v-show="false"
+            :image="image2"
+            :size="stageSize"
+            :config="currentConfig"
+            :no-event="defaultNoEvent"
+            :data="computedData"
+          />
         </div>
       </el-main>
     </el-container>
