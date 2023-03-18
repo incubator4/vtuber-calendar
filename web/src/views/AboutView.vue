@@ -48,7 +48,7 @@
 .about {
   height: 80vh;
   /* text-align: center; */
-  padding: 100px;
+  padding: 50px;
   /* margin: 40px; */
 }
 

@@ -58,7 +58,9 @@ const currentFormat = computed(() => {
 </script>
 
 <template>
-  <div style="height: 80vh; text-align: center; padding: 100px">
+  <div
+    style="height: 80vh; text-align: center; padding: auto; min-width: 350px"
+  >
     <el-card>
       <template #header>
         <el-space>
