@@ -102,7 +102,7 @@ const onNew = () => {
     ...defaultEvent,
   };
   const d = moment();
-  eventModel.id = vtuberStore.currentVtuber?.id;
+  eventModel.cid = vtuberStore.currentVtuber?.id as number;
   eventModel.start_time = d.toDate();
   eventModel.end_time = d.add(2, "h").toDate();
   dialogVisible.value = true;
