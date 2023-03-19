@@ -6,47 +6,27 @@ import (
 
 func NewServer() *gin.Engine {
 	r := gin.Default()
+	r.Use(HttpRequestTotalMetrics, HttpRequestDurationMetrics)
 	api := r.Group("/api")
-	{
-		cal := api.Group("/cal")
-		registerCalendars(cal)
+
+	routes := []struct {
+		Group    *gin.RouterGroup
+		Register func(g *gin.RouterGroup)
+	}{
+		{api.Group("/cal"), registerCalendars},
+		{api.Group("/vtubers"), registerVtubers},
+		{api.Group("/characters"), registerVtubers},
+		{api.Group("/event_tags"), registerEventTag},
+		{api.Group("/image_render"), registerImageRender},
+		{api.Group("/ics"), registerICS},
+		{api.Group("/status"), registerStatus},
+		{api.Group("/milestones"), registerMilestone},
+		{api.Group("/bilibili"), registerBilibili},
+		{api.Group("/metrics"), registerMetrics},
 	}
 
-	{
-		vtuber := api.Group("/vtubers")
-		characters := api.Group("/characters")
-		registerVtubers(vtuber)
-		registerVtubers(characters)
-	}
-
-	{
-		eventTags := api.Group("/event_tags")
-		registerEventTag(eventTags)
-	}
-
-	{
-		imageRender := api.Group("/image_render")
-		registerImageRender(imageRender)
-	}
-
-	{
-		ics := api.Group("/ics")
-		registerICS(ics)
-	}
-
-	{
-		status := api.Group("/status")
-		registerStatus(status)
-	}
-
-	{
-		milestone := api.Group("/milestones")
-		registerMilestone(milestone)
-	}
-
-	{
-		bilibili := api.Group("/bilibili")
-		registerBilibili(bilibili)
+	for _, route := range routes {
+		route.Register(route.Group)
 	}
 
 	return r
