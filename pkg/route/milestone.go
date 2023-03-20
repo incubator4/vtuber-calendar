@@ -2,7 +2,7 @@ package route
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/incubator4/vtuber-calendar/pkg/dao"
+	dao2 "github.com/incubator4/vtuber-calendar/internal/dao"
 	"net/http"
 	"strconv"
 )
@@ -23,7 +23,7 @@ func ListMilestone(c *gin.Context) {
 		return
 	}
 
-	milestones, err := dao.ListMileStone(dao.WithVtuberID(vid), dao.WithOrder("date"))
+	milestones, err := dao2.ListMileStone(dao2.WithVtuberID(vid), dao2.WithOrder("date"))
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"error": err,

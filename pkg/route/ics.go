@@ -4,7 +4,7 @@ import (
 	"fmt"
 	ics "github.com/arran4/golang-ical"
 	"github.com/gin-gonic/gin"
-	"github.com/incubator4/vtuber-calendar/pkg/dao"
+	dao2 "github.com/incubator4/vtuber-calendar/internal/dao"
 	"net/http"
 	"strconv"
 )
@@ -20,7 +20,7 @@ func GetICS(c *gin.Context) {
 	if err != nil {
 		all = false
 	}
-	calendars, _ := dao.ListCalendars(dao.WithUID([]string{UID}), dao.WithOrder("id"), dao.WithAll(all))
+	calendars, _ := dao2.ListCalendars(dao2.WithUID([]string{UID}), dao2.WithOrder("id"), dao2.WithAll(all))
 
 	cal := ics.NewCalendar()
 	cal.SetMethod(ics.MethodRequest)

@@ -2,7 +2,7 @@ package route
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/incubator4/vtuber-calendar/pkg/dao"
+	dao2 "github.com/incubator4/vtuber-calendar/internal/dao"
 	"net/http"
 	"strconv"
 )
@@ -27,9 +27,9 @@ func ListImageRenderConfig(c *gin.Context) {
 		return
 	}
 
-	configs, err := dao.ListImageRenderConfig(
-		dao.WithOwner(owner),
-		dao.WithOrder("id"),
+	configs, err := dao2.ListImageRenderConfig(
+		dao2.WithOwner(owner),
+		dao2.WithOrder("id"),
 	)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
@@ -45,6 +45,6 @@ func ListImageRenderConfig(c *gin.Context) {
 
 func GetImageRenderConfig(c *gin.Context) {
 	id := c.MustGet("id").(int)
-	config := dao.GetImageRenderConfig(id)
+	config := dao2.GetImageRenderConfig(id)
 	c.JSON(http.StatusOK, config)
 }
