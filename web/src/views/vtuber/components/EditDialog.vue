@@ -14,7 +14,7 @@ const ruleFormRef = ref<FormInstance>();
 
 const props = defineProps<{
   modelValue: boolean;
-  event: ICalendar;
+  event: TagCalendar;
 }>();
 
 const emit = defineEmits(["update:modelValue", "update"]);
@@ -33,7 +33,7 @@ const calcValue = computed<boolean>({
   },
 });
 
-const editEvent = ref<ICalendar>(props.event);
+const editEvent = ref<TagCalendar>(props.event);
 
 const rules = reactive<FormRules>({
   title: [{ required: true, message: "Please input Title", trigger: "blur" }],
@@ -121,8 +121,12 @@ const colGrid = {
         <el-input style="width: 90%" v-model="editEvent.title"></el-input>
       </el-form-item>
       <el-form-item label="类型">
-        <el-select style="width: 90%" v-model="editEvent.tag_id" placeholder="">
-          <el-option label="暂无" :value="0"></el-option>
+        <el-select
+          multiple
+          style="width: 90%"
+          v-model="editEvent.tags"
+          placeholder=""
+        >
           <el-option
             v-for="tag in calendarStore.tags"
             :label="tag.name"

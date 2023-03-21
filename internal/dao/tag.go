@@ -10,7 +10,7 @@ func ListTags(options ...Option) ([]model.Tag, error) {
 	for _, option := range options {
 		db = option(db)
 	}
-	result := db.Find(&tags)
+	result := db.Debug().Find(&tags)
 
 	return tags, result.Error
 }

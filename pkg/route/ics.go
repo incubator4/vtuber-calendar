@@ -20,7 +20,7 @@ func GetICS(c *gin.Context) {
 	if err != nil {
 		all = false
 	}
-	calendars, _ := dao.ListCalendars(
+	calendars, _ := dao.ListCombineCalendars(
 		dao.CombineCalendar(dao.WithUID([]string{UID}), dao.WithOrder("id"), dao.WithAll(all)),
 	)
 

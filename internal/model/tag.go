@@ -7,8 +7,9 @@ import (
 )
 
 type Tag struct {
-	ID   int    `json:"id" gorm:"primaryKey;"`
-	Name string `json:"name" gorm:"column:name"`
+	ID        int        `json:"id" gorm:"primaryKey;"`
+	Name      string     `json:"name" gorm:"column:name"`
+	Calendars []Calendar `json:"-" gorm:"many2many:calendar_tags;"`
 }
 
 func (Tag) TableName() string {

@@ -10,16 +10,16 @@ const calendarStore = useCalendarStore();
 
 const emits = defineEmits(["update"]);
 
-const defaultEvent: ICalendar = {
+const defaultEvent: TagCalendar = {
   title: "",
   start_time: moment().toDate(),
   end_time: moment().add(2, "h").toDate(),
-  cid: vtuberStore.currentVtuber?.id as number,
-  tag_id: 0,
+  vid: vtuberStore.currentVtuber?.id as number,
+  tags: [],
   is_active: true,
 };
 
-let eventModel = reactive<ICalendar>(defaultEvent);
+let eventModel = reactive<TagCalendar>(defaultEvent);
 const isReverse = ref(true);
 const renderPanel = ref(false);
 const dialogVisible = ref(false);
@@ -102,13 +102,13 @@ const onNew = () => {
     ...defaultEvent,
   };
   const d = moment();
-  eventModel.cid = vtuberStore.currentVtuber?.id as number;
+  eventModel.vid = vtuberStore.currentVtuber?.id as number;
   eventModel.start_time = d.toDate();
   eventModel.end_time = d.add(2, "h").toDate();
   dialogVisible.value = true;
 };
 
-const onEdit = (event: ICalendar) => {
+const onEdit = (event: TagCalendar) => {
   eventModel = {
     ...event,
   };
@@ -183,7 +183,7 @@ const onRender = () => {
     <el-table-column prop="title" label="Title" />
     <el-table-column prop="tag_id" label="Tag" width="80">
       <template #default="{ row }">
-        <el-tag> {{ tagName(row.tag_id) }} </el-tag>
+        <el-tag v-for="tag in row.tags"> {{ tagName(tag) }} </el-tag>
       </template>
     </el-table-column>
     <el-table-column fixed="right" label="Action" width="180">

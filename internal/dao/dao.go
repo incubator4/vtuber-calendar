@@ -85,6 +85,12 @@ func WithAll(all bool) Option {
 
 }
 
+func Preload(query string) Option {
+	return func(db *gorm.DB) *gorm.DB {
+		return db.Preload(query)
+	}
+}
+
 func Where(query interface{}, args ...interface{}) Option {
 	return func(db *gorm.DB) *gorm.DB {
 		return db.Where(query, args)
@@ -93,15 +99,10 @@ func Where(query interface{}, args ...interface{}) Option {
 
 func CombineCalendar(options ...Option) Option {
 	return func(db *gorm.DB) *gorm.DB {
-		db = db.
-			Select("calendar.*,vtuber.name,vtuber.live_id,vtuber.uid,vtuber.main_color," +
-				"COALESCE(json_agg(cal_tag.tag_id) FILTER (WHERE cal_tag.tag_id is not NULL), '[]'::json) AS tags").
-			Joins("LEFT JOIN cal_tag ON cal_tag.cal_id = calendar.id").
-			Joins("INNER JOIN vtuber ON  vtuber.id = calendar.vid")
+		db = db.Table("vtuber_calendar")
 		for _, option := range options {
 			db = option(db)
 		}
-		return db.
-			Group("calendar.id,vtuber.name,vtuber.live_id,vtuber.uid,vtuber.main_color")
+		return db
 	}
 }

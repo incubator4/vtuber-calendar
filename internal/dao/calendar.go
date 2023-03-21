@@ -4,8 +4,8 @@ import (
 	"github.com/incubator4/vtuber-calendar/internal/model"
 )
 
-func ListCalendars(options ...Option) ([]model.CombineCalendar, error) {
-	var calendars []model.CombineCalendar
+func ListCalendars(options ...Option) ([]model.Calendar, error) {
+	var calendars []model.Calendar
 	db := DB
 	for _, option := range options {
 		db = option(db)
@@ -16,8 +16,8 @@ func ListCalendars(options ...Option) ([]model.CombineCalendar, error) {
 	return calendars, result.Error
 }
 
-func GetCalendar(options ...Option) *model.CombineCalendar {
-	var c = new(model.CombineCalendar)
+func GetCalendar(options ...Option) *model.Calendar {
+	var c = new(model.Calendar)
 	db := DB
 	for _, option := range options {
 		db = option(db)
@@ -27,6 +27,9 @@ func GetCalendar(options ...Option) *model.CombineCalendar {
 }
 
 func UpdateCalendar(cal model.Calendar) *model.CombineCalendar {
+	tags := cal.Tags
+	_ = DB.Model(&cal).Association("Tags").Clear()
+	cal.Tags = tags
 	DB.Save(&cal)
 	var c = new(model.CombineCalendar)
 	DB.Where("id = ?", cal.ID).First(&c)

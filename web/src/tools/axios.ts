@@ -2,7 +2,7 @@ import axios from "axios";
 
 const request = axios.create({
   baseURL: "/api", // 所有请求的公共地址部分
-  timeout: 3000, // 请求超时时间 这里的意思是当请求时间超过5秒还未取得结果时 提示用户请求超时
+  timeout: 5000, // 请求超时时间 这里的意思是当请求时间超过5秒还未取得结果时 提示用户请求超时
 });
 
 request.interceptors.request.use(

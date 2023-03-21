@@ -14,6 +14,7 @@ func NewServer() *gin.Engine {
 		Register func(g *gin.RouterGroup)
 	}{
 		{api.Group("/cal"), registerCalendars},
+		{api.Group("/calendar"), registerCombineCalendars},
 		{api.Group("/vtubers"), registerVtubers},
 		{api.Group("/characters"), registerVtubers},
 		{api.Group("/tags"), registerTag},

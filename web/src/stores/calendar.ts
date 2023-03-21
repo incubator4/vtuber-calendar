@@ -43,7 +43,7 @@ export const useCalendarStore = defineStore("calendar", () => {
   const deleteCalendar = (id: number) => request.delete(`/cal/${id}`);
 
   const listTags = () => {
-    return request.get<ITag[]>("/event_tags").then((res) => {
+    return request.get<ITag[]>("/tags").then((res) => {
       tags.value = res.data;
     });
   };

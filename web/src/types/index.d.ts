@@ -12,8 +12,11 @@ interface ICalendar {
   start_time: Date;
   end_time: Date;
   vid: number;
-  tag_id: number;
   is_active: boolean;
+}
+
+interface TagCalendar extends ICalendar {
+  tags: Array<number>;
 }
 
 interface ITag {
@@ -21,9 +24,7 @@ interface ITag {
   name: string;
 }
 
-interface VtuberCalendar extends ICalendar, IVtuber {
-  tags: Array<number>;
-}
+type VtuberCalendar = TagCalendar & Vtuber;
 
 interface IMilestone {
   id: number;

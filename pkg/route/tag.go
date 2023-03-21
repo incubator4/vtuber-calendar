@@ -13,7 +13,7 @@ func registerTag(g *gin.RouterGroup) {
 }
 
 func ListTags(c *gin.Context) {
-	tags, err := dao.ListTags()
+	tags, err := dao.ListTags(dao.Preload("Calendars"))
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"error": err,
