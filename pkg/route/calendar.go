@@ -50,6 +50,7 @@ func ListCalendars(c *gin.Context) {
 		dao.WithTimeRange(timeRange),
 		dao.WithOrder("id"),
 		dao.WithAll(all),
+		dao.Where("is_delete", false),
 	)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{

@@ -6,7 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/incubator4/vtuber-calendar/internal/dao"
 	"net/http"
-	"strconv"
 )
 
 func registerICS(g *gin.RouterGroup) {
@@ -16,12 +15,10 @@ func registerICS(g *gin.RouterGroup) {
 
 func GetICS(c *gin.Context) {
 	UID := c.Param("uid")
-	all, err := strconv.ParseBool(c.DefaultQuery("all", "false"))
-	if err != nil {
-		all = false
-	}
 	calendars, _ := dao.ListCombineCalendars(
-		dao.CombineCalendar(dao.WithUID([]string{UID}), dao.WithOrder("id"), dao.WithAll(all)),
+		dao.WithUID([]string{UID}),
+		dao.WithOrder("id"),
+		dao.Where("is_delete", false),
 	)
 
 	cal := ics.NewCalendar()
