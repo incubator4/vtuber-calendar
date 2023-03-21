@@ -73,12 +73,6 @@ func WithOrder(order string) Option {
 	}
 }
 
-func WithNotDelete() Option {
-	return func(db *gorm.DB) *gorm.DB {
-		return db.Where("is_delete = ?", false)
-	}
-}
-
 func WithAll(all bool) Option {
 	if all {
 		return func(db *gorm.DB) *gorm.DB {
@@ -91,14 +85,23 @@ func WithAll(all bool) Option {
 
 }
 
-func WithOwner(id int) Option {
+func Where(query interface{}, args ...interface{}) Option {
 	return func(db *gorm.DB) *gorm.DB {
-		return db.Where("own_id = ?", id)
+		return db.Where(query, args)
 	}
 }
 
-func WithID(id int) Option {
+func CombineCalendar(options ...Option) Option {
 	return func(db *gorm.DB) *gorm.DB {
-		return db.Where("id = ?", id)
+		db = db.
+			Select("calendar.*,character.name,character.live_id,character.uid,character.main_color," +
+				"COALESCE(json_agg(cal_tag.tag_id) FILTER (WHERE cal_tag.tag_id is not NULL), '[]'::json) AS tags").
+			Joins("LEFT JOIN cal_tag ON cal_tag.cal_id = calendar.id").
+			Joins("INNER JOIN character ON  character.id = calendar.cid")
+		for _, option := range options {
+			db = option(db)
+		}
+		return db.
+			Group("calendar.id,character.name,character.live_id,character.uid,character.main_color")
 	}
 }

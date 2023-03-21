@@ -22,17 +22,15 @@ type Character struct {
 	MainColor string `json:"main_color" gorm:"column:main_color"`
 }
 
-type CharacterCalendar struct {
+type CombineCalendar struct {
+	Character
 	Calendar
-	Name      string `json:"name"`
-	UID       int    `json:"uid" gorm:"column:uid"`
-	LiveID    int    `json:"live_id" gorm:"column:live_id"`
-	MainColor string `json:"main_color" gorm:"column:main_color"`
+	Tags TagIDArray `json:"tags"`
 }
 
-func (CharacterCalendar) TableName() string {
-	return "character_calendar"
-}
+//func (CombineCalendar) TableName() string {
+//	return "calendar"
+//}
 
 func (Calendar) TableName() string {
 	return "calendar"

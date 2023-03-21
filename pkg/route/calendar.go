@@ -37,11 +37,13 @@ func ListCalendars(c *gin.Context) {
 		return
 	}
 	calendars, err := dao.ListCalendars(
-		dao.WithUID(uids),
-		dao.WithCID(cids),
-		dao.WithTimeRange(timeRange),
-		dao.WithOrder("id"),
-		dao.WithAll(all),
+		dao.CombineCalendar(
+			dao.WithUID(uids),
+			dao.WithCID(cids),
+			dao.WithTimeRange(timeRange),
+			dao.WithOrder("id"),
+			dao.WithAll(all),
+		),
 	)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
@@ -57,7 +59,7 @@ func ListCalendars(c *gin.Context) {
 
 func GetCalendars(c *gin.Context) {
 	id := c.MustGet("id").(int)
-	calendar := dao.GetCalendar(id)
+	calendar := dao.GetCalendar(dao.CombineCalendar(dao.Where("calendar.id = ?", id)))
 	c.JSON(http.StatusOK, calendar)
 }
 

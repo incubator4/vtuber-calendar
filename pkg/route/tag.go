@@ -10,7 +10,6 @@ import (
 func registerTag(g *gin.RouterGroup) {
 	g.GET("", ListTags)
 	g.GET("/:id", GetTag)
-
 }
 
 func ListTags(c *gin.Context) {
@@ -34,7 +33,7 @@ func GetTag(c *gin.Context) {
 			"error": err,
 		})
 	}
-	tag, err := dao.GetTags(dao.WithID(id))
+	tag, err := dao.GetTags(dao.Where("id = ?", id))
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"error": err,
