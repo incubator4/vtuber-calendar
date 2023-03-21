@@ -3,7 +3,7 @@ package route
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/incubator4/vtuber-calendar/internal/dao"
-	"github.com/incubator4/vtuber-calendar/pkg"
+	"github.com/incubator4/vtuber-calendar/internal/model"
 	"net/http"
 	"strconv"
 )
@@ -30,7 +30,7 @@ func GetVtuber(c *gin.Context) {
 		})
 		return
 	}
-	character := dao.GetCharacter(pkg.Character{UID: uid})
+	character := dao.GetCharacter(model.Character{UID: uid})
 	c.JSON(http.StatusOK, gin.H{
 		"data": character,
 	})

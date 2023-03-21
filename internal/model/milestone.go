@@ -1,11 +1,11 @@
-package pkg
+package model
 
 import (
 	"time"
 )
 
 type Milestone struct {
-	ID          uint      `json:"id" gorm:"primarykey"`
+	ID          uint      `json:"id" gorm:"primaryKey"`
 	VtuberID    int64     `json:"vid" gorm:"column:vid"`
 	Date        time.Time `json:"date"`
 	Event       string    `json:"event"`

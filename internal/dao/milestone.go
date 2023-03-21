@@ -1,12 +1,12 @@
 package dao
 
 import (
-	"github.com/incubator4/vtuber-calendar/pkg"
+	"github.com/incubator4/vtuber-calendar/internal/model"
 	"gorm.io/gorm"
 )
 
-func ListMileStone(options ...Option) ([]pkg.Milestone, error) {
-	var milestones []pkg.Milestone
+func ListMileStone(options ...Option) ([]model.Milestone, error) {
+	var milestones []model.Milestone
 	//db := params.TimeRange.DB(DB)
 	db := DB
 	for _, option := range options {

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/incubator4/vtuber-calendar/internal/dao"
-	"github.com/incubator4/vtuber-calendar/pkg"
+	"github.com/incubator4/vtuber-calendar/internal/model"
 	"github.com/incubator4/vtuber-calendar/pkg/types"
 	"net/http"
 	"strconv"
@@ -63,7 +63,7 @@ func GetCalendars(c *gin.Context) {
 
 func UpdateCalendar(c *gin.Context) {
 	id := c.MustGet("id").(int)
-	var calendar pkg.Calendar
+	var calendar model.Calendar
 	if err := c.ShouldBindJSON(&calendar); err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"error": fmt.Sprintf("Calendar %d not found, err: %s", id, err),
@@ -78,7 +78,7 @@ func UpdateCalendar(c *gin.Context) {
 }
 
 func CreateCalendar(c *gin.Context) {
-	var calendar pkg.Calendar
+	var calendar model.Calendar
 	if err := c.ShouldBindJSON(&calendar); err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"error": fmt.Sprintf("Err: %s", err),

@@ -1,9 +1,11 @@
 package dao
 
-import "github.com/incubator4/vtuber-calendar/pkg"
+import (
+	"github.com/incubator4/vtuber-calendar/internal/model"
+)
 
-func ListImageRenderConfig(options ...Option) ([]pkg.ImageRenderConfig, error) {
-	var configs []pkg.ImageRenderConfig
+func ListImageRenderConfig(options ...Option) ([]model.ImageRenderConfig, error) {
+	var configs []model.ImageRenderConfig
 	db := DB
 	for _, option := range options {
 		db = option(db)
@@ -13,8 +15,8 @@ func ListImageRenderConfig(options ...Option) ([]pkg.ImageRenderConfig, error) {
 	return configs, result.Error
 }
 
-func GetImageRenderConfig(id int) *pkg.ImageRenderConfig {
-	var c = new(pkg.ImageRenderConfig)
+func GetImageRenderConfig(id int) *model.ImageRenderConfig {
+	var c = new(model.ImageRenderConfig)
 	DB.First(&c, id)
 	return c
 }
