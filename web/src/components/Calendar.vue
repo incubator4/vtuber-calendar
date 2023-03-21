@@ -2,9 +2,7 @@
 import { useVtuberStore, useCalendarStore } from "@/stores";
 import moment from "moment";
 import { groupBy } from "lodash";
-import Avatar from "./icons/Avatar.vue";
 import Calendar from "./Calendar/index.vue";
-import { useScreen } from "vue-screen";
 import { useLocalStorage } from "@vueuse/core";
 import { useRoute } from "vue-router";
 
@@ -134,7 +132,7 @@ const handleCheckedVtubersChange = (value: number[]) => {
     <Calendar
       :calendars="
         calendarStore.calendars.filter((cal) =>
-          checkboxVtubers.includes(cal.cid)
+          checkboxVtubers.includes(cal.vid)
         )
       "
     />
