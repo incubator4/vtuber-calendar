@@ -94,14 +94,14 @@ func Where(query interface{}, args ...interface{}) Option {
 func CombineCalendar(options ...Option) Option {
 	return func(db *gorm.DB) *gorm.DB {
 		db = db.
-			Select("calendar.*,character.name,character.live_id,character.uid,character.main_color," +
+			Select("calendar.*,vtuber.name,vtuber.live_id,vtuber.uid,vtuber.main_color," +
 				"COALESCE(json_agg(cal_tag.tag_id) FILTER (WHERE cal_tag.tag_id is not NULL), '[]'::json) AS tags").
 			Joins("LEFT JOIN cal_tag ON cal_tag.cal_id = calendar.id").
-			Joins("INNER JOIN character ON  character.id = calendar.cid")
+			Joins("INNER JOIN vtuber ON  vtuber.id = calendar.vid")
 		for _, option := range options {
 			db = option(db)
 		}
 		return db.
-			Group("calendar.id,character.name,character.live_id,character.uid,character.main_color")
+			Group("calendar.id,vtuber.name,vtuber.live_id,vtuber.uid,vtuber.main_color")
 	}
 }

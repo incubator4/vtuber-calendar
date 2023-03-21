@@ -29,7 +29,7 @@ func GetICS(c *gin.Context) {
 	cal.SetTzid("Asia/Shanghai")
 
 	for _, calendar := range calendars {
-		e := ics.NewEvent(fmt.Sprintf("%d - %s", calendar.CharacterID, calendar.StartTime))
+		e := ics.NewEvent(fmt.Sprintf("%d - %s", calendar.VtuberID, calendar.StartTime))
 		e.SetCreatedTime(calendar.StartTime)
 		e.SetStartAt(calendar.StartTime)
 		e.SetEndAt(calendar.EndTime)

@@ -30,7 +30,7 @@ func GetVtuber(c *gin.Context) {
 		})
 		return
 	}
-	character := dao.GetCharacter(model.Character{UID: uid})
+	character := dao.GetCharacter(model.Vtuber{UID: uid})
 	c.JSON(http.StatusOK, gin.H{
 		"data": character,
 	})
