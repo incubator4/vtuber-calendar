@@ -16,8 +16,8 @@ func ListCharacter() []model.Vtuber {
 	return characters
 }
 
-func ListCIDS(UIDArray []string) []string {
-	var CIDArray []string
-	DB.Table("vtuber").Select("uid").Where("uid IN (?)", UIDArray).Find(&CIDArray)
-	return CIDArray
+func ListVIDS(UIDArray []string) []string {
+	var VIDArray []string
+	DB.Table("vtuber").Select("id").Where("uid IN (?)", UIDArray).Find(&VIDArray)
+	return VIDArray
 }

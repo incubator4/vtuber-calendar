@@ -92,6 +92,9 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   });
 };
 
+const tagChange = (val: Array<number>) => {
+  editEvent.value.tags = calendarStore.tags.filter((t) => val.includes(t.id));
+};
 const handleClose = () => {
   emit("update:modelValue", false);
 };
@@ -124,8 +127,8 @@ const colGrid = {
         <el-select
           multiple
           style="width: 90%"
-          v-model="editEvent.tags"
-          placeholder=""
+          :model-value="editEvent.tags.map((t) => t.id)"
+          @change="tagChange"
         >
           <el-option
             v-for="tag in calendarStore.tags"

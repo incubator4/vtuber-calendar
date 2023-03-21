@@ -29,12 +29,12 @@ func ListCalendars(c *gin.Context) {
 	}
 	uids := c.QueryArray("uid")
 
-	var cids []string
+	var vids []string
 
-	if len(cids) > 0 {
-		uids = dao.ListCIDS(uids)
+	if len(uids) > 0 {
+		vids = dao.ListVIDS(uids)
 	} else {
-		cids = c.QueryArray("cid")
+		vids = c.QueryArray("vid")
 	}
 
 	all, err := strconv.ParseBool(c.DefaultQuery("all", "false"))
@@ -46,7 +46,7 @@ func ListCalendars(c *gin.Context) {
 	}
 	calendars, err := dao.ListCalendars(
 		dao.Preload("Tags"),
-		dao.WithCID(cids),
+		dao.WithVID(vids),
 		dao.WithTimeRange(timeRange),
 		dao.WithOrder("id"),
 		dao.WithAll(all),

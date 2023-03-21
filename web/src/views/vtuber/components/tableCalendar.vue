@@ -181,9 +181,9 @@ const onRender = () => {
     </el-table-column>
 
     <el-table-column prop="title" label="Title" />
-    <el-table-column prop="tag_id" label="Tag" width="80">
+    <el-table-column prop="tag_id" label="Tag">
       <template #default="{ row }">
-        <el-tag v-for="tag in row.tags"> {{ tagName(tag) }} </el-tag>
+        <el-tag v-for="tag in row.tags"> {{ tag.name }} </el-tag>
       </template>
     </el-table-column>
     <el-table-column fixed="right" label="Action" width="180">
