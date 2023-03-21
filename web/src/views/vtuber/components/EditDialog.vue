@@ -14,7 +14,7 @@ const ruleFormRef = ref<FormInstance>();
 
 const props = defineProps<{
   modelValue: boolean;
-  event: TagCalendar;
+  event: ICalendar;
 }>();
 
 const emit = defineEmits(["update:modelValue", "update"]);
@@ -33,7 +33,7 @@ const calcValue = computed<boolean>({
   },
 });
 
-const editEvent = ref<TagCalendar>(props.event);
+const editEvent = ref<ICalendar>(props.event);
 
 const rules = reactive<FormRules>({
   title: [{ required: true, message: "Please input Title", trigger: "blur" }],

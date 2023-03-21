@@ -10,7 +10,7 @@ const calendarStore = useCalendarStore();
 
 const emits = defineEmits(["update"]);
 
-const defaultEvent: TagCalendar = {
+const defaultEvent: ICalendar = {
   title: "",
   start_time: moment().toDate(),
   end_time: moment().add(2, "h").toDate(),
@@ -19,7 +19,7 @@ const defaultEvent: TagCalendar = {
   is_active: true,
 };
 
-let eventModel = reactive<TagCalendar>(defaultEvent);
+let eventModel = reactive<ICalendar>(defaultEvent);
 const isReverse = ref(true);
 const renderPanel = ref(false);
 const dialogVisible = ref(false);
@@ -108,7 +108,7 @@ const onNew = () => {
   dialogVisible.value = true;
 };
 
-const onEdit = (event: TagCalendar) => {
+const onEdit = (event: ICalendar) => {
   eventModel = {
     ...event,
   };

@@ -39,14 +39,14 @@ vtuberStore.fetchAll().then(() => {
   }
 });
 
-calendarStore.listCalendar({
+calendarStore.listVtuberCalendar({
   // start: moment(startOfWeek).format("yyyy-MM-DD"),
   end: moment(endofWeek).add(1, "days").format("yyyy-MM-DD"),
 });
 
 const currentWeekCal = computed(() =>
   groupBy(
-    calendarStore.calendars
+    calendarStore.vtuberCalendars
       // .filter(({ start_time }) => {
       //   const date = new Date(start_time);
       //   return date > startOfWeek && date < endofWeek;
@@ -131,7 +131,7 @@ const handleCheckedVtubersChange = (value: number[]) => {
     </div>
     <Calendar
       :calendars="
-        calendarStore.calendars.filter((cal) =>
+        calendarStore.vtuberCalendars.filter((cal) =>
           checkboxVtubers.includes(cal.vid)
         )
       "

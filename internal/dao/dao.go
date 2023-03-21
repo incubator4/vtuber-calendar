@@ -60,7 +60,7 @@ func WithUID(UIDArray []string) Option {
 func WithCID(CIDArray []string) Option {
 	return func(db *gorm.DB) *gorm.DB {
 		if CIDArray != nil && len(CIDArray) > 0 {
-			return db.Where("cid IN (?)", CIDArray)
+			return db.Where("id IN (?)", CIDArray)
 		} else {
 			return db
 		}

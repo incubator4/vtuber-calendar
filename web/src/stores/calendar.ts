@@ -3,8 +3,29 @@ import request from "@/tools/axios";
 import qs from "qs";
 
 export const useCalendarStore = defineStore("calendar", () => {
-  const calendars = ref<Array<VtuberCalendar>>([]);
+  const vtuberCalendars = ref<Array<VtuberCalendar>>([]);
+  const calendars = ref<Array<ICalendar>>([]);
   const tags = ref<Array<ITag>>([]);
+
+  const listVtuberCalendar = (params?: {
+    start?: string;
+    end?: string;
+    uid?: Array<string>;
+    all?: boolean;
+  }) => {
+    return request
+      .get<VtuberCalendar[]>(`/calendar`, {
+        params,
+        paramsSerializer: {
+          serialize: (params) => {
+            return qs.stringify(params, { arrayFormat: "repeat" });
+          },
+        },
+      })
+      .then((res) => {
+        vtuberCalendars.value = res.data;
+      });
+  };
 
   const getCalendar = (uid: number) => {
     return request.get<VtuberCalendar[]>(`/cal/${uid}`).then((res) => {
@@ -27,7 +48,7 @@ export const useCalendarStore = defineStore("calendar", () => {
     all?: boolean;
   }) => {
     return request
-      .get<VtuberCalendar[]>(`/cal`, {
+      .get<ICalendar[]>(`/cal`, {
         params,
         paramsSerializer: {
           serialize: (params) => {
@@ -53,8 +74,10 @@ export const useCalendarStore = defineStore("calendar", () => {
   };
 
   return {
+    vtuberCalendars,
     calendars,
     tags,
+    listVtuberCalendar,
     getCalendar,
     updateCalendar,
     createCalendar,

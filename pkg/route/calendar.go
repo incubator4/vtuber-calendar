@@ -27,8 +27,16 @@ func ListCalendars(c *gin.Context) {
 		})
 		return
 	}
-	cids := c.QueryArray("cid")
 	uids := c.QueryArray("uid")
+
+	var cids []string
+
+	if len(cids) > 0 {
+		uids = dao.ListCIDS(uids)
+	} else {
+		cids = c.QueryArray("cid")
+	}
+
 	all, err := strconv.ParseBool(c.DefaultQuery("all", "false"))
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
@@ -38,7 +46,6 @@ func ListCalendars(c *gin.Context) {
 	}
 	calendars, err := dao.ListCalendars(
 		dao.Preload("Tags"),
-		dao.WithUID(uids),
 		dao.WithCID(cids),
 		dao.WithTimeRange(timeRange),
 		dao.WithOrder("id"),
