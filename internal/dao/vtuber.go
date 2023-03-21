@@ -6,12 +6,12 @@ import (
 
 func GetCharacter(_c model.Vtuber) *model.Vtuber {
 	var c = new(model.Vtuber)
-	DB.Table("character").Where(&_c).First(c)
+	DB.Where(&_c).First(c)
 	return c
 }
 
 func ListCharacter() []model.Vtuber {
 	var characters []model.Vtuber
-	DB.Table("character").Order("id").Find(&characters)
+	DB.Order("id").Find(&characters)
 	return characters
 }
