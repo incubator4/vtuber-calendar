@@ -18,7 +18,6 @@ func GetICS(c *gin.Context) {
 	calendars, _ := dao.ListCombineCalendars(
 		dao.WithUID([]string{UID}),
 		dao.WithOrder("id"),
-		dao.Where("is_delete", false),
 	)
 
 	cal := ics.NewCalendar()
