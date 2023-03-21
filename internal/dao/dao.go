@@ -96,3 +96,9 @@ func WithOwner(id int) Option {
 		return db.Where("own_id = ?", id)
 	}
 }
+
+func WithID(id int) Option {
+	return func(db *gorm.DB) *gorm.DB {
+		return db.Where("id = ?", id)
+	}
+}

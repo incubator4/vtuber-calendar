@@ -16,7 +16,7 @@ func NewServer() *gin.Engine {
 		{api.Group("/cal"), registerCalendars},
 		{api.Group("/vtubers"), registerVtubers},
 		{api.Group("/characters"), registerVtubers},
-		{api.Group("/event_tags"), registerTag},
+		{api.Group("/tags"), registerTag},
 		{api.Group("/image_render"), registerImageRender},
 		{api.Group("/ics"), registerICS},
 		{api.Group("/status"), registerStatus},
